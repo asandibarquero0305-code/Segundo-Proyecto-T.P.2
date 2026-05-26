@@ -1,6 +1,7 @@
 #elaborado por Aaron Sandi y Brandon Coronado
 import pickle
 import random
+
 TIPOS_SANGRE = (
     "O+", "O-",
     "A+", "A-",
@@ -118,7 +119,7 @@ def generar_donadores(donadores):
     except:
         print("\nError al generar donadores.")
 
-        
+
 def mostrar_donadores(donadores):
     if len(donadores) == 0:
         print("\nNo hay donadores registrados.")
@@ -139,9 +140,19 @@ def mostrar_donadores(donadores):
             print("Correo:", donador[6])
             print("Teléfono:", donador[7])
 
-        
+
+def mostrar_lugares():
+    print("---------------------------------------------")
+    print("       LUGARES DE DONACION")
+    print("---------------------------------------------")
+    for provincia in lugares_donacion:
+        print("\nProvincia:", provincia)
+        for lugar in lugares_donacion[provincia]:
+            print("-", lugar)
+
+
 def menu_principal():
-    cargar_datos()
+    donadores = cargar_datos()
     while True:
         print("---------------------------------------------")
         print("            BANCO DE SANGRE")
@@ -152,9 +163,9 @@ def menu_principal():
         print("4. Salir")
         opcion = input("\nSeleccione una opción: ")
         if opcion == "1":
-            generar_donadores()
+            generar_donadores(donadores)
         elif opcion == "2":
-            mostrar_donadores()
+            mostrar_donadores(donadores)
         elif opcion == "3":
             mostrar_lugares()
         elif opcion == "4":
@@ -162,3 +173,6 @@ def menu_principal():
             break
         else:
             print("\nOpción inválida.")
+
+
+menu_principal()
