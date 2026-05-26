@@ -151,6 +151,33 @@ def mostrar_lugares():
             print("-", lugar)
 
 
+def actualizar_donador(donadores):
+    cedula_buscar = input("Ingrese la cédula del donador: ")
+    encontrado = False
+    for donador in donadores:
+        if donador[1] == cedula_buscar:
+            encontrado = True
+            print("Donador encontrado.")
+            print("Nombre actual:", donador[0])
+            print("Peso actual:", donador[5])
+            print("Correo actual:", donador[6])
+            print("Teléfono actual:", donador[7])
+            print("------------------------------------")
+            nuevo_nombre = input("\nNuevo nombre: ")
+            nuevo_peso = float(input("Nuevo peso: "))
+            nuevo_correo = input("Nuevo correo: ")
+            nuevo_telefono = input("Nuevo teléfono: ")
+            print("------------------------------------")
+            donador[0] = nuevo_nombre
+            donador[5] = nuevo_peso
+            donador[6] = nuevo_correo
+            donador[7] = nuevo_telefono
+            guardar_datos(donadores)
+            print("\nDatos actualizados correctamente.")
+    if encontrado == False:
+        print("\nLa persona no está registrada.")
+
+
 def menu_principal():
     donadores = cargar_datos()
     while True:
@@ -160,7 +187,8 @@ def menu_principal():
         print("1. Generar donadores")
         print("2. Mostrar donadores")
         print("3. Mostrar lugares de donación")
-        print("4. Salir")
+        print("4. Actualizar donador")
+        print("5. Salir")
         opcion = input("\nSeleccione una opción: ")
         if opcion == "1":
             generar_donadores(donadores)
@@ -169,6 +197,8 @@ def menu_principal():
         elif opcion == "3":
             mostrar_lugares()
         elif opcion == "4":
+            actualizar_donador(donadores)
+        elif opcion == "5":
             print("\nDonar sangre es donar vida.")
             break
         else:
