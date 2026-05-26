@@ -200,6 +200,7 @@ def menu_principal():
             actualizar_donador(donadores)
         elif opcion == "5":
             print("\nDonar sangre es donar vida.")
+            print("Gracias.\n")
             break
         else:
             print("\nOpción inválida.")
