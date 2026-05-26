@@ -1,1 +1,64 @@
 #elaborado por Aaron Sandi y Brandon Coronado
+import pickle
+import random
+TIPOS_SANGRE = (
+    "O+", "O-",
+    "A+", "A-",
+    "B+", "B-",
+    "AB+", "AB-"
+)
+
+donadores = []
+
+lugares_donacion = {
+    1: [
+        "Banco Nacional de Sangre",
+        "Hospital México",
+        "Hospital San Juan de Dios"
+    ],
+    2: [
+        "Hospital San Rafael de Alajuela",
+        "Hospital de San Ramón",
+        "Hospital del Cantón Norteño"
+    ],
+    3: [
+        "Hospital Max Peralta"
+    ],
+    4: [
+        "Hospital San Vicente de Paúl"
+    ],
+    5: [
+        "Hospital La Anexión",
+        "Hospital Enrique Baltodano"
+    ],
+    6: [
+        "Hospital Monseñor Sanabria"
+    ],
+    7: [
+        "Hospital Tony Facio",
+        "Hospital de Guápiles"
+    ]
+}
+
+def menu_principal():
+    cargar_datos()
+    while True:
+        print("---------------------------------------------")
+        print("            BANCO DE SANGRE")
+        print("---------------------------------------------")
+        print("1. Generar donadores")
+        print("2. Mostrar donadores")
+        print("3. Mostrar lugares de donación")
+        print("4. Salir")
+        opcion = input("\nSeleccione una opción: ")
+        if opcion == "1":
+            generar_donadores()
+        elif opcion == "2":
+            mostrar_donadores()
+        elif opcion == "3":
+            mostrar_lugares()
+        elif opcion == "4":
+            print("\nDonar sangre es donar vida.")
+            break
+        else:
+            print("\nOpción inválida.")
