@@ -2,7 +2,7 @@
 import pickle
 import random
 
-TIPOS_SANGRE = (
+TIPOSSANGRE = (
     "O+", "O-",
     "A+", "A-",
     "B+", "B-",
@@ -11,7 +11,7 @@ TIPOS_SANGRE = (
 
 donadores = []
 
-lugares_donacion = {
+lugaresDonacion = {
     1: [
         "Banco Nacional de Sangre",
         "Hospital México",
@@ -42,7 +42,12 @@ lugares_donacion = {
 }
 
 
-def cargar_datos():
+def cargarDatos():
+    '''
+    Funcionalidad: Carga la base de datos de los donadores.
+    Entrada: No recibe entradas.
+    Salida: Retorna la lista de donadores.
+    '''
     try:
         archivo = open("donadores.dat", "rb")
         datos = pickle.load(archivo)
@@ -54,14 +59,24 @@ def cargar_datos():
         return []
 
 
-def guardar_datos(donadores):
+def guardarDatos(donadores):
+    '''
+    Funcionalidad: Guarda los donadores en memoria secundaria.
+    Entrada: Recibe la lista de donadores.
+    Salida: Guarda los datos en un archivo.
+    '''
     archivo = open("donadores.dat", "wb")
     pickle.dump(donadores, archivo)
     archivo.close()
     print("\nDatos guardados correctamente.")
 
 
-def generar_donadores(donadores):
+def generarDonadores(donadores):
+    '''
+    Funcionalidad: Genera donadores aleatoriamente.
+    Entrada: Recibe la lista de donadores.
+    Salida: Agrega nuevos donadores a la lista.
+    '''
     try:
         cantidad = int(input("\nIngrese la cantidad de donadores: "))
         if cantidad <= 0:
@@ -78,12 +93,12 @@ def generar_donadores(donadores):
                 + str(random.randint(1000, 9999))
             )
 
-            tipo_sangre = random.choice(TIPOS_SANGRE)
+            tipoSangre = random.choice(TIPOSSANGRE)
             sexo = random.choice([True, False])
             dia = random.randint(1, 28)
             mes = random.randint(1, 12)
             annio = random.randint(1960, 2007)
-            fecha_nacimiento = (dia, mes, annio)
+            fechaNacimiento = (dia, mes, annio)
             peso = random.randint(45, 120)
             correo = (
                 "donador"
@@ -97,30 +112,35 @@ def generar_donadores(donadores):
                 + "-"
                 + str(random.randint(1000,9999))
             )
-            
+
             estado = random.choice([0,1])
             justificacion = random.randint(1,7)
             donador = [
                 nombre,
                 cedula,
-                tipo_sangre,
+                tipoSangre,
                 sexo,
-                fecha_nacimiento,
+                fechaNacimiento,
                 peso,
                 correo,
                 telefono,
                 estado,
                 justificacion
             ]
-            
+
             donadores.append(donador)
-        guardar_datos(donadores)
+        guardarDatos(donadores)
         print("\nDonadores generados correctamente.")
     except:
         print("\nError al generar donadores.")
 
 
-def mostrar_donadores(donadores):
+def mostrarDonadores(donadores):
+    '''
+    Funcionalidad: Muestra todos los donadores registrados.
+    Entrada: Recibe la lista de donadores.
+    Salida: Muestra la información de los donadores.
+    '''
     if len(donadores) == 0:
         print("\nNo hay donadores registrados.")
     else:
@@ -141,21 +161,31 @@ def mostrar_donadores(donadores):
             print("Teléfono:", donador[7])
 
 
-def mostrar_lugares():
+def mostrarLugares():
+    '''
+    Funcionalidad: Muestra los lugares de donación por provincia.
+    Entrada: No recibe entradas.
+    Salida: Muestra los lugares de donación.
+    '''
     print("---------------------------------------------")
     print("       LUGARES DE DONACION")
     print("---------------------------------------------")
-    for provincia in lugares_donacion:
+    for provincia in lugaresDonacion:
         print("\nProvincia:", provincia)
-        for lugar in lugares_donacion[provincia]:
+        for lugar in lugaresDonacion[provincia]:
             print("-", lugar)
 
 
-def actualizar_donador(donadores):
-    cedula_buscar = input("Ingrese la cédula del donador: ")
+def actualizarDonador(donadores):
+    '''
+    Funcionalidad: Actualiza la información de un donador.
+    Entrada: Recibe la lista de donadores.
+    Salida: Modifica los datos de un donador.
+    '''
+    cedulaBuscar = input("Ingrese la cédula del donador: ")
     encontrado = False
     for donador in donadores:
-        if donador[1] == cedula_buscar:
+        if donador[1] == cedulaBuscar:
             encontrado = True
             print("Donador encontrado.")
             print("Nombre actual:", donador[0])
@@ -163,23 +193,100 @@ def actualizar_donador(donadores):
             print("Correo actual:", donador[6])
             print("Teléfono actual:", donador[7])
             print("------------------------------------")
-            nuevo_nombre = input("\nNuevo nombre: ")
-            nuevo_peso = float(input("Nuevo peso: "))
-            nuevo_correo = input("Nuevo correo: ")
-            nuevo_telefono = input("Nuevo teléfono: ")
+            nuevoNombre = input("\nNuevo nombre: ")
+            nuevoPeso = float(input("Nuevo peso: "))
+            nuevoCorreo = input("Nuevo correo: ")
+            nuevoTelefono = input("Nuevo teléfono: ")
             print("------------------------------------")
-            donador[0] = nuevo_nombre
-            donador[5] = nuevo_peso
-            donador[6] = nuevo_correo
-            donador[7] = nuevo_telefono
-            guardar_datos(donadores)
+            donador[0] = nuevoNombre
+            donador[5] = nuevoPeso
+            donador[6] = nuevoCorreo
+            donador[7] = nuevoTelefono
+            guardarDatos(donadores)
             print("\nDatos actualizados correctamente.")
     if encontrado == False:
         print("\nLa persona no está registrada.")
 
 
-def menu_principal():
-    donadores = cargar_datos()
+def reporteTipoSangre(donadores):
+    '''
+    Funcionalidad: Muestra la cantidad de donadores por tipo de sangre.
+    Entrada: Recibe la lista de donadores.
+    Salida: Muestra un reporte de tipos de sangre.
+    '''
+    print("---------------------------------------------")
+    print("       REPORTE POR TIPO DE SANGRE")
+    print("---------------------------------------------")
+    for tipo in tiposSangre:
+        cantidad = 0
+        for donador in donadores:
+            if donador[2] == tipo:
+                cantidad += 1
+        print(tipo, ":", cantidad)
+
+
+def reporteActivos(donadores):
+    '''
+    Funcionalidad: Muestra los donadores activos.
+    Entrada: Recibe la lista de donadores.
+    Salida: Muestra los donadores activos registrados.
+    '''
+    print("---------------------------------------------")
+    print("         DONADORES ACTIVOS")
+    print("---------------------------------------------")
+    encontrados = False
+    for donador in donadores:
+        if donador[8] == 1:
+            encontrados = True
+            print("\nNombre:", donador[0])
+            print("Cédula:", donador[1])
+            print("Tipo:", donador[2])
+    if encontrados == False:
+        print("\nNo hay donadores activos.")
+
+
+def reporteMujeresONegativo(donadores):
+    '''
+    Funcionalidad: Muestra las mujeres con tipo de sangre O-.
+    Entrada: Recibe la lista de donadores.
+    Salida: Muestra las mujeres O- registradas.
+    '''
+    print("---------------------------------------------")
+    print("          MUJERES O-")
+    print("---------------------------------------------")
+    encontradas = False
+    for donador in donadores:
+        if donador[2] == "O-" and donador[3] == False:
+            encontradas = True
+            print("\nNombre:", donador[0])
+            print("Cédula:", donador[1])
+            print("Correo:", donador[6])
+    if encontradas == False:
+        print("\nNo existen mujeres O-.")
+
+
+def reporteProvincias():
+    '''
+    Funcionalidad: Muestra la cantidad de lugares por provincia.
+    Entrada: No recibe entradas.
+    Salida: Muestra un reporte de lugares de donación.
+    '''
+    print("---------------------------------------------")
+    print("      LUGARES POR PROVINCIA")
+    print("---------------------------------------------")
+    for provincia in lugaresDonacion:
+        cantidad = len(lugaresDonacion[provincia])
+        print("\nProvincia", provincia)
+        print("Cantidad de lugares:", cantidad)
+   
+
+def menuPrincipal():
+    '''
+    Funcionalidad: Controla el menú principal del sistema.
+    Entrada: No recibe entradas.
+    Salida: Ejecuta las opciones del programa.
+    '''
+    donadores = cargarDatos()
     while True:
         print("---------------------------------------------")
         print("            BANCO DE SANGRE")
@@ -188,17 +295,29 @@ def menu_principal():
         print("2. Mostrar donadores")
         print("3. Mostrar lugares de donación")
         print("4. Actualizar donador")
-        print("5. Salir")
+        print("5. Reporte por tipo de sangre")
+        print("6. Reporte de donadores activos")
+        print("7. Reporte mujeres O-")
+        print("8. Reporte lugares por provincia")
+        print("9. Salir")
         opcion = input("\nSeleccione una opción: ")
         if opcion == "1":
-            generar_donadores(donadores)
+            generarDonadores(donadores)
         elif opcion == "2":
-            mostrar_donadores(donadores)
+            mostrarDonadores(donadores)
         elif opcion == "3":
-            mostrar_lugares()
+            mostrarLugares()
         elif opcion == "4":
-            actualizar_donador(donadores)
+            actualizarDonador(donadores)
         elif opcion == "5":
+            reporteTipoSangre(donadores)
+        elif opcion == "6":
+            reporteActivos(donadores)
+        elif opcion == "7":
+            reporteMujeresONegativo(donadores)
+        elif opcion == "8":
+            reporteProvincias()
+        elif opcion == "9":
             print("\nDonar sangre es donar vida.")
             print("Gracias.\n")
             break
@@ -206,4 +325,4 @@ def menu_principal():
             print("\nOpción inválida.")
 
 
-menu_principal()
+menuPrincipal()
