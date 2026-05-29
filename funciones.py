@@ -153,3 +153,51 @@ def reporteListaCompleta(baseDatos):
     encabezados=["Cédula","Nombre completo","Tipo de sangre","Fecha de nacimiento","Peso","Sexo","Teléfono","Correo"]
 
     return crearHtml("reporte_lista_completa.html","Lista completa de donadores",encabezados,datos)
+
+def reporteAQuienPuedeDonar(baseDatos,tipoSangre):
+    datos=[]
+    compatibles=puedeDonarA[tipoSangre]
+
+    for donador in baseDatos:
+        if donador[8]==1 and donador[2] in compatibles:
+            datos.append([
+                donador[1],
+                donador[0][0]+" "+donador[0][1]+" "+donador[0][2],
+                donador[2],
+                donador[7],
+                donador[6]
+            ])
+
+    encabezados=["Cédula","Nombre completo","Tipo de sangre","Teléfono","Correo"]
+
+    return crearHtml("reporte_a_quien_puede_donar.html","Reporte ¿A quién puede donar?",encabezados,datos)
+
+def reporteNoActivos(baseDatos):
+    datos=[]
+
+    for donador in baseDatos:
+        if donador[8]==0:
+            if donador[3]==True:
+                sexo="Masculino"
+
+            else:
+                sexo="Femenino"
+
+            datos.append([
+                justificaciones[donador[9]],
+                donador[1],
+                donador[0][0]+" "+donador[0][1]+" "+donador[0][2],
+                donador[2],
+                donador[4],
+                donador[5],
+                sexo,
+                donador[7],
+                donador[6]
+            ])
+
+    encabezados=["Justificación","Cédula","Nombre completo","Tipo de sangre","Fecha de nacimiento","Peso","Sexo","Teléfono","Correo"]
+
+    return crearHtml("reporte_no_activos.html","Reporte de donantes no activos",encabezados,datos)
+
+def salir():
+    return "Donar sangre, es donar vida"
