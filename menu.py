@@ -280,6 +280,44 @@ def reporteProvincias():
         print("Cantidad de lugares:", cantidad)
    
 
+def reporteDonadoresProvincia(donadores):
+    '''
+    Funcionalidad: Muestra la cantidad de donadores por provincia.
+    Entrada: Recibe la lista de donadores.
+    Salida: Muestra la cantidad de donadores registrados por provincia.
+    '''
+    print("---------------------------------------------")
+    print("      DONADORES POR PROVINCIA")
+    print("---------------------------------------------")
+    for provincia in range(1, 8):
+        cantidad = 0
+        for donador in donadores:
+            cedula = donador[1]
+            if cedula.startswith(str(provincia) + "-"):
+                cantidad += 1
+        print("Provincia", provincia, ":", cantidad)
+
+
+def reporteNoActivos(donadores):
+    '''
+    Funcionalidad: Muestra los donadores no activos.
+    Entrada: Recibe la lista de donadores.
+    Salida: Muestra los donadores no activos registrados.
+    '''
+    print("---------------------------------------------")
+    print("       DONADORES NO ACTIVOS")
+    print("---------------------------------------------")
+    encontrados = False
+    for donador in donadores:
+        if donador[8] == 0:
+            encontrados = True
+            print("\nNombre:", donador[0])
+            print("Cédula:", donador[1])
+            print("Tipo de sangre:", donador[2])
+    if encontrados == False:
+        print("\nNo hay donadores no activos.")
+
+
 def menuPrincipal():
     '''
     Funcionalidad: Controla el menú principal del sistema.
@@ -299,7 +337,9 @@ def menuPrincipal():
         print("6. Reporte de donadores activos")
         print("7. Reporte mujeres O-")
         print("8. Reporte lugares por provincia")
-        print("9. Salir")
+        print("9. Reporte donadores por provincia")
+        print("10. Reporte donadores no activos")
+        print("11. Salir")
         opcion = input("\nSeleccione una opción: ")
         if opcion == "1":
             generarDonadores(donadores)
@@ -318,6 +358,10 @@ def menuPrincipal():
         elif opcion == "8":
             reporteProvincias()
         elif opcion == "9":
+            reporteDonadoresProvincia(donadores)
+        elif opcion == "10":
+            reporteNoActivos(donadores)
+        elif opcion == "11":
             print("\nDonar sangre es donar vida.")
             print("Gracias.\n")
             break
