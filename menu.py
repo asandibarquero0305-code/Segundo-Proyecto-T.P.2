@@ -318,6 +318,70 @@ def reporteNoActivos(donadores):
         print("\nNo hay donadores no activos.")
 
 
+def reportePuedeRecibir(donadores):
+    '''
+    Funcionalidad: Muestra de cuáles tipos de sangre puede recibir un donador.
+    Entrada: Recibe la lista de donadores.
+    Salida: Muestra la compatibilidad de recepción de sangre.
+    '''
+    cedulaBuscar = input("Ingrese la cédula del donador: ")
+    encontrado = False
+    for donador in donadores:
+        if donador[1] == cedulaBuscar:
+            encontrado = True
+            tipoSangre = donador[2]
+            print("---------------------------------------------")
+            print("       COMPATIBILIDAD DE RECEPCION")
+            print("---------------------------------------------")
+            print("Nombre:", donador[0])
+            print("Tipo de sangre:", tipoSangre)
+            if tipoSangre == "O-":
+                print("\nPuede recibir solamente de:")
+                print("O-")
+            elif tipoSangre == "O+":
+                print("\nPuede recibir de:")
+                print("O-")
+                print("O+")
+            elif tipoSangre == "A-":
+                print("\nPuede recibir de:")
+                print("O-")
+                print("A-")
+            elif tipoSangre == "A+":
+                print("\nPuede recibir de:")
+                print("O-")
+                print("O+")
+                print("A-")
+                print("A+")
+            elif tipoSangre == "B-":
+                print("\nPuede recibir de:")
+                print("O-")
+                print("B-")
+            elif tipoSangre == "B+":
+                print("\nPuede recibir de:")
+                print("O-")
+                print("O+")
+                print("B-")
+                print("B+")
+            elif tipoSangre == "AB-":
+                print("\nPuede recibir de:")
+                print("O-")
+                print("A-")
+                print("B-")
+                print("AB-")
+            elif tipoSangre == "AB+":
+                print("\nPuede recibir de:")
+                print("O-")
+                print("O+")
+                print("A-")
+                print("A+")
+                print("B-")
+                print("B+")
+                print("AB-")
+                print("AB+")
+    if encontrado == False:
+        print("\nLa persona no está registrada.")
+
+
 def menuPrincipal():
     '''
     Funcionalidad: Controla el menú principal del sistema.
@@ -339,7 +403,8 @@ def menuPrincipal():
         print("8. Reporte lugares por provincia")
         print("9. Reporte donadores por provincia")
         print("10. Reporte donadores no activos")
-        print("11. Salir")
+        print("11. ¿De quién puede recibir?")
+        print("12. Salir")
         opcion = input("\nSeleccione una opción: ")
         if opcion == "1":
             generarDonadores(donadores)
@@ -362,6 +427,8 @@ def menuPrincipal():
         elif opcion == "10":
             reporteNoActivos(donadores)
         elif opcion == "11":
+            reportePuedeRecibir(donadores)
+        elif opcion == "12":
             print("\nDonar sangre es donar vida.")
             print("Gracias.\n")
             break
