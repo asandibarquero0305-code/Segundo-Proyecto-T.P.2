@@ -3,7 +3,9 @@ from tkinter import *
 from tkinter import messagebox
 from funciones import *
 
+
 baseDatos = cargarDatos()
+
 
 def ventanaGenerarDonadores():
     '''
@@ -11,19 +13,37 @@ def ventanaGenerarDonadores():
     Entrada: No recibe entradas.
     Salida: Genera donadores nuevos.
     '''
+
     ventana = Toplevel()
     ventana.title("Generar donadores")
     ventana.geometry("300x200")
+
     Label(ventana,text="Cantidad de donadores").pack()
+
     cantidad = Entry(ventana)
     cantidad.pack()
 
-    def generar():
-        mensaje = generarDonadores(baseDatos,int(cantidad.get()))
-        messagebox.showinfo("Resultado",mensaje)
 
-    Button(ventana,text="Generar",command=generar).pack()
-    Button(ventana,text="Regresar",command=ventana.destroy).pack()
+    def generar():
+
+        mensaje = generarDonadores(
+            baseDatos,
+            int(cantidad.get())
+        )
+
+        messagebox.showinfo(
+            "Resultado",
+            mensaje
+        )
+
+
+    Button(
+        ventana,
+        text="Generar",
+        command=generar
+    ).pack()
+
+
 
 def ventanaInsertarDonador():
     '''
@@ -31,11 +51,11 @@ def ventanaInsertarDonador():
     Entrada: No recibe entradas.
     Salida: Registra un donador.
     '''
+
     ventana = Toplevel()
     ventana.title("Insertar donador")
     ventana.geometry("400x500")
 
-    entradas=[]
 
     datos=[
         "Nombre",
@@ -53,22 +73,37 @@ def ventanaInsertarDonador():
     ]
 
 
+    entradas=[]
+
+
     for dato in datos:
-        Label(ventana,text=dato).pack()
+
+        Label(
+            ventana,
+            text=dato
+        ).pack()
+
         entrada=Entry(ventana)
+
         entrada.pack()
+
         entradas.append(entrada)
 
-    def insertar():
-        donador=[
 
+
+    def insertar():
+
+        donador=[
             [
                 entradas[0].get(),
                 entradas[1].get(),
                 entradas[2].get()
             ],
+
             entradas[3].get(),
+
             entradas[4].get(),
+
             True if entradas[5].get()=="1" else False,
 
             (
@@ -76,17 +111,30 @@ def ventanaInsertarDonador():
                 int(entradas[7].get()),
                 int(entradas[8].get())
             ),
-            
+
             float(entradas[9].get()),
+
             entradas[10].get(),
+
             entradas[11].get(),
 
             1,
+
             0
         ]
 
-        mensaje=insertarDonador(baseDatos,donador)
-        messagebox.showinfo("Resultado",mensaje)
+
+        mensaje=insertarDonador(
+            baseDatos,
+            donador
+        )
+
+
+        messagebox.showinfo(
+            "Resultado",
+            mensaje
+        )
+
 
     Button(
         ventana,
@@ -94,55 +142,62 @@ def ventanaInsertarDonador():
         command=insertar
     ).pack()
 
-    Button(
-        ventana,
-        text="Regresar",
-        command=ventana.destroy
-    ).pack()
+
 
 def ventanaActualizarDonador():
     '''
-    Funcionalidad: Abre ventana para actualizar un donador.
+    Funcionalidad: Abre ventana para actualizar donador.
     Entrada: No recibe entradas.
-    Salida: Actualiza información.
+    Salida: Actualiza datos.
     '''
+
     ventana=Toplevel()
-    ventana.title("Actualizar donador")
+
+    ventana.title("Actualizar")
+
     ventana.geometry("350x350")
+
 
     textos=[
         "Cédula",
-        "Nombre nuevo",
-        "Peso nuevo",
-        "Correo nuevo",
-        "Teléfono nuevo"
+        "Nombre",
+        "Peso",
+        "Correo",
+        "Teléfono"
     ]
+
+
     entradas=[]
 
+
     for texto in textos:
-        Label(ventana,text=texto).pack()
+
+        Label(
+            ventana,
+            text=texto
+        ).pack()
+
+
         entrada=Entry(ventana)
+
         entrada.pack()
         entradas.append(entrada)
 
     def actualizar():
-        nombre=[
-            entradas[1].get(),
-            "",
-            ""
-        ]
-
         mensaje=actualizarDonador(
             baseDatos,
             entradas[0].get(),
-            nombre,
+            [entradas[1].get(),"",""],
             float(entradas[2].get()),
             entradas[3].get(),
             entradas[4].get()
         )
 
-        messagebox.showinfo("Resultado",mensaje)
-        
+        messagebox.showinfo(
+            "Resultado",
+            mensaje
+        )
+
     Button(
         ventana,
         text="Actualizar",
@@ -153,15 +208,25 @@ def ventanaEliminarDonador():
     '''
     Funcionalidad: Abre ventana para eliminar donador.
     Entrada: No recibe.
-    Salida: Elimina un donador.
+    Salida: Elimina donador.
     '''
     ventana=Toplevel()
-    ventana.title("Eliminar donador")
+    ventana.title("Eliminar")
     ventana.geometry("300x250")
-    Label(ventana,text="Cédula").pack()
+
+    Label(
+        ventana,
+        text="Cédula"
+    ).pack()
+
     cedula=Entry(ventana)
     cedula.pack()
-    Label(ventana,text="Justificación").pack()
+
+    Label(
+        ventana,
+        text="Justificación"
+    ).pack()
+
     justificacion=Entry(ventana)
     justificacion.pack()
 
@@ -171,6 +236,7 @@ def ventanaEliminarDonador():
             cedula.get(),
             int(justificacion.get())
         )
+
         messagebox.showinfo(
             "Resultado",
             mensaje
@@ -182,19 +248,60 @@ def ventanaEliminarDonador():
         command=eliminar
     ).pack()
 
-def ventanaReportes():
+def ventanaInsertarLugar():
     '''
-    Funcionalidad: Muestra todos los reportes.
+    Funcionalidad: Abre ventana para insertar lugares.
     Entrada: No recibe.
-    Salida: Abre reportes.
+    Salida: Agrega un lugar.
     '''
     ventana=Toplevel()
-    ventana.title("Reportes")
-    ventana.geometry("400x450")
+    ventana.title("Insertar lugar")
+    ventana.geometry("300x250")
+
+    Label(
+        ventana,
+        text="Provincia"
+    ).pack()
+    provincia=Entry(ventana)
+    provincia.pack()
+    Label(
+        ventana,
+        text="Lugar"
+    ).pack()
+    lugar=Entry(ventana)
+    lugar.pack()
+
+    def agregar():
+        mensaje=insertarLugar(
+            lugaresDonacion,
+            int(provincia.get()),
+            lugar.get()
+        )
+
+        messagebox.showinfo(
+            "Resultado",
+            mensaje
+        )
 
     Button(
         ventana,
-        text="Tipo de sangre",
+        text="Agregar",
+        command=agregar
+    ).pack()
+
+def ventanaReportes():
+    '''
+    Funcionalidad: Muestra menú de reportes.
+    Entrada: No recibe.
+    Salida: Genera reportes.
+    '''
+    ventana=Toplevel()
+    ventana.title("Reportes")
+    ventana.geometry("400x600")
+
+    Button(
+        ventana,
+        text="Tipo sangre",
         command=lambda:
         messagebox.showinfo(
             "Reporte",
@@ -214,7 +321,7 @@ def ventanaReportes():
 
     Button(
         ventana,
-        text="Donadores por provincia",
+        text="Donadores provincia",
         command=lambda:
         messagebox.showinfo(
             "Reporte",
@@ -224,7 +331,7 @@ def ventanaReportes():
 
     Button(
         ventana,
-        text="Lugares de donación",
+        text="Lugares",
         command=lambda:
         messagebox.showinfo(
             "Reporte",
@@ -234,7 +341,7 @@ def ventanaReportes():
 
     Button(
         ventana,
-        text="Donadores no activos",
+        text="No activos",
         command=lambda:
         messagebox.showinfo(
             "Reporte",
@@ -242,13 +349,22 @@ def ventanaReportes():
         )
     ).pack()
 
+    Button(
+        ventana,
+        text="Lista completa",
+        command=lambda:
+        messagebox.showinfo(
+            "Reporte",
+            reporteListaCompleta(baseDatos)
+        )
+    ).pack()
+
     Label(
         ventana,
-        text="Tipo sangre para consultar donación"
+        text="Tipo sangre"
     ).pack()
 
     tipo=Entry(ventana)
-
     tipo.pack()
 
     Button(
@@ -263,78 +379,99 @@ def ventanaReportes():
 
     Button(
         ventana,
-        text="Regresar",
-        command=ventana.destroy
+        text="¿De quién puede recibir?",
+        command=lambda:
+        messagebox.showinfo(
+            "Reporte",
+            reportePuedeRecibir(tipo.get())
+        )
     ).pack()
 
-    Button(
-    ventana,
-    text="Lista completa",
-    command=lambda:
-    messagebox.showinfo(
-        "Reporte",
-        reporteListaCompleta(baseDatos)
-    )
-).pack()
+    Label(
+        ventana,
+        text="Rango edad"
+    ).pack()
+
+    edad1=Entry(ventana)
+    edad1.pack()
+    edad2=Entry(ventana)
+    edad2.pack()
 
     Button(
-    ventana,
-    text="Rango de edad",
-    command=lambda:
-    messagebox.showinfo(
-        "Reporte",
-        reporteRangoEdad(baseDatos,18,40)
-    )
-).pack()
+        ventana,
+        text="Reporte edad",
+        command=lambda:
+        messagebox.showinfo(
+            "Reporte",
+            reporteRangoEdad(
+                baseDatos,
+                int(edad1.get()),
+                int(edad2.get())
+            )
+        )
+    ).pack()
 
 def cerrarPrograma():
     '''
-    Funcionalidad: Cierra el sistema.
+    Funcionalidad: Cierra el programa.
     Entrada: No recibe.
-    Salida: Termina programa.
+    Salida: Termina ejecución.
     '''
     messagebox.showinfo(
         "Mensaje",
         salir()
     )
     ventanaPrincipal.destroy()
+
 ventanaPrincipal=Tk()
 ventanaPrincipal.title("Banco de Sangre")
 ventanaPrincipal.geometry("400x450")
+
 Label(
     ventanaPrincipal,
     text="BANCO DE SANGRE",
     font=("Arial",18)
 ).pack()
+
 Button(
     ventanaPrincipal,
     text="Generar donadores",
     command=ventanaGenerarDonadores
 ).pack()
+
 Button(
     ventanaPrincipal,
     text="Insertar donador",
     command=ventanaInsertarDonador
 ).pack()
+
 Button(
     ventanaPrincipal,
     text="Actualizar donador",
     command=ventanaActualizarDonador
 ).pack()
+
 Button(
     ventanaPrincipal,
     text="Eliminar donador",
     command=ventanaEliminarDonador
 ).pack()
+
+Button(
+    ventanaPrincipal,
+    text="Insertar lugar",
+    command=ventanaInsertarLugar
+).pack()
+
 Button(
     ventanaPrincipal,
     text="Reportes",
     command=ventanaReportes
 ).pack()
+
 Button(
     ventanaPrincipal,
     text="Salir",
     command=cerrarPrograma
 ).pack()
-
 ventanaPrincipal.mainloop()
