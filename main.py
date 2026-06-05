@@ -267,6 +267,26 @@ def ventanaReportes():
         command=ventana.destroy
     ).pack()
 
+    Button(
+    ventana,
+    text="Lista completa",
+    command=lambda:
+    messagebox.showinfo(
+        "Reporte",
+        reporteListaCompleta(baseDatos)
+    )
+).pack()
+
+    Button(
+    ventana,
+    text="Rango de edad",
+    command=lambda:
+    messagebox.showinfo(
+        "Reporte",
+        reporteRangoEdad(baseDatos,18,40)
+    )
+).pack()
+
 def cerrarPrograma():
     '''
     Funcionalidad: Cierra el sistema.
