@@ -1,8 +1,28 @@
+import pickle
+import random
 from datetime import datetime
 
-tiposSangre=("O+","O-","A+","A-","B+","B-","AB+","AB-")
+tiposSangre = (
+    "O+", "O-",
+    "A+", "A-",
+    "B+", "B-",
+    "AB+", "AB-"
+)
 
-justificaciones={
+lugaresDonacion = {
+    1:["Banco Nacional de Sangre",
+       "Hospital México",
+       "Hospital San Juan de Dios"],
+
+    2:["Hospital San Rafael de Alajuela"],
+    3:["Hospital Max Peralta"],
+    4:["Hospital San Vicente de Paúl"],
+    5:["Hospital La Anexión"],
+    6:["Hospital Monseñor Sanabria"],
+    7:["Hospital Tony Facio"]
+}
+
+justificaciones = {
     1:"Enfermedad infecciosa o crónica.",
     2:"Conducta de riesgo.",
     3:"Problema de salud física.",
@@ -12,7 +32,7 @@ justificaciones={
     7:"Situación específica."
 }
 
-puedeDonarA={
+puedeDonarA = {
     "O-":["O-","O+","A-","A+","B-","B+","AB-","AB+"],
     "O+":["O+","A+","B+","AB+"],
     "A-":["A-","A+","AB-","AB+"],
@@ -23,181 +43,222 @@ puedeDonarA={
     "AB+":["AB+"]
 }
 
-def calcularEdad(fecha):
-    dia=fecha[0]
-    mes=fecha[1]
-    anno=fecha[2]
+def cargarDatos():
+    '''
+    Funcionalidad: Carga los datos almacenados.
+    Entrada: No recibe entradas.
+    Salida: Retorna la base de datos.
+    '''
+    try:
+        archivo = open("donadores.dat","rb")
+        datos = pickle.load(archivo)
+        archivo.close()
+        return datos
+    except:
+        return []
 
-    hoy=datetime.now()
-    edad=hoy.year-anno
-
-    if hoy.month<mes:
-        edad=edad-1
-
-    elif hoy.month==mes and hoy.day<dia:
-        edad=edad-1
-
-    return edad
-
-def insertarDonador(baseDatos,donador):
-    cedula=donador[1]
-
-    for persona in baseDatos:
-        if persona[1]==cedula:
-            return "La persona ya está registrada."
-
-    baseDatos.append(donador)
-
-    return "Donador registrado correctamente."
-
-def eliminarDonador(baseDatos,cedula,justificacion):
-    for donador in baseDatos:
-        if donador[1]==cedula:
-            donador[8]=0
-            donador[9]=justificacion
-
-            return "Donador eliminado satisfactoriamente."
-
-    return "La persona con el número de cédula "+cedula+" no está registrada."
-
-def insertarLugar(lugares,provincia,nuevoLugar):
-    if provincia not in lugares:
-        lugares[provincia]=[]
-
-    for lugar in lugares[provincia]:
-        if lugar==nuevoLugar:
-            return "El lugar ya está registrado."
-
-    lugares[provincia].append(nuevoLugar)
-
-    return "Lugar registrado correctamente."
-
-def crearHtml(nombreArchivo,titulo,encabezados,datos):
-    archivo=open(nombreArchivo,"w",encoding="utf-8")
-
-    archivo.write("<!DOCTYPE html>\n")
-    archivo.write("<html>\n")
-    archivo.write("<head>\n")
-    archivo.write("<meta charset='UTF-8'>\n")
-    archivo.write("<title>"+titulo+"</title>\n")
-    archivo.write("</head>\n")
-    archivo.write("<body>\n")
-
-    archivo.write("<h1>"+titulo+"</h1>\n")
-    archivo.write("<p>Fecha y hora: "+str(datetime.now())+"</p>\n")
-
-    archivo.write("<table border='1'>\n")
-    archivo.write("<tr>\n")
-
-    for encabezado in encabezados:
-        archivo.write("<th>"+encabezado+"</th>\n")
-
-    archivo.write("</tr>\n")
-
-    for fila in datos:
-        archivo.write("<tr>\n")
-
-        for dato in fila:
-            archivo.write("<td>"+str(dato)+"</td>\n")
-
-        archivo.write("</tr>\n")
-
-    archivo.write("</table>\n")
-    archivo.write("</body>\n")
-    archivo.write("</html>\n")
-
+def guardarDatos(baseDatos):
+    '''
+    Funcionalidad: Guarda la información en memoria secundaria.
+    Entrada: Recibe la base de datos.
+    Salida: Guarda el archivo.
+    '''
+    archivo = open("donadores.dat","wb")
+    pickle.dump(baseDatos,archivo)
     archivo.close()
 
-    return "Reporte creado satisfactoriamente."
+def calcularEdad(fecha):
+    '''
+    Funcionalidad: Calcula la edad de un donador.
+    Entrada: Recibe la fecha de nacimiento.
+    Salida: Retorna la edad.
+    '''
+    dia = fecha[0]
+    mes = fecha[1]
+    anno = fecha[2]
+    hoy = datetime.now()
+    edad = hoy.year - anno
+    if hoy.month < mes:
+        edad -= 1
+    elif hoy.month == mes and hoy.day < dia:
+        edad -= 1
+    return edad
 
-def reporteRangoEdad(baseDatos,edadInicial,edadFinal):
-    datos=[]
+def generarDonadores(baseDatos,cantidad):
+    '''
+    Funcionalidad: Genera donadores aleatoriamente.
+    Entrada: Recibe la base de datos y cantidad.
+    Salida: Agrega donadores generados.
+    '''
+    for i in range(cantidad):
+        numero = len(baseDatos)+1
 
+        donador = [
+            ["Donador",str(numero),"Sistema"],
+            str(random.randint(1,7))+
+            "-"+
+            str(random.randint(1000,9999))+
+            "-"+
+            str(random.randint(1000,9999)),
+            random.choice(tiposSangre),
+            random.choice([True,False]),
+
+            (
+                random.randint(1,28),
+                random.randint(1,12),
+                random.randint(1960,2007)
+            ),
+            random.randint(45,120),
+            "donador"+str(numero)+"@gmail.com",
+            "8888-"+str(random.randint(1000,9999)),
+            1,
+
+            0
+
+        ]
+
+        baseDatos.append(donador)
+    guardarDatos(baseDatos)
+    return "Donadores generados correctamente."
+
+def insertarDonador(baseDatos,donador):
+    '''
+    Funcionalidad: Inserta un donador nuevo.
+    Entrada: Recibe la base de datos y donador.
+    Salida: Retorna resultado.
+    '''
+    for persona in baseDatos:
+        if persona[1] == donador[1]:
+            return "La persona ya está registrada."
+    baseDatos.append(donador)
+    guardarDatos(baseDatos)
+    return "Donador registrado correctamente."
+
+def actualizarDonador(baseDatos,cedula,nombre,peso,correo,telefono):
+    '''
+    Funcionalidad: Actualiza información de un donador.
+    Entrada: Recibe datos nuevos.
+    Salida: Retorna mensaje.
+    '''
     for donador in baseDatos:
-        edad=calcularEdad(donador[4])
+        if donador[1] == cedula:
+            donador[0] = nombre
+            donador[5] = peso
+            donador[6] = correo
+            donador[7] = telefono
+            guardarDatos(baseDatos)
+            return "Datos actualizados correctamente."
+    return "La persona no está registrada."
 
-        if donador[8]==1 and edad>=edadInicial and edad<=edadFinal:
-            datos.append([
-                donador[1],
-                donador[0][0]+" "+donador[0][1]+" "+donador[0][2],
-                donador[4],
-                donador[7],
-                donador[6]
-            ])
-
-    encabezados=["Cédula","Nombre completo","Fecha de nacimiento","Teléfono","Correo"]
-
-    return crearHtml("reporte_rango_edad.html","Reporte por rango de edad",encabezados,datos)
-
-def reporteListaCompleta(baseDatos):
-    datos=[]
-
+def eliminarDonador(baseDatos,cedula,justificacion):
+    '''
+    Funcionalidad: Elimina un donador.
+    Entrada: Recibe cédula y justificación.
+    Salida: Retorna mensaje.
+    '''
     for donador in baseDatos:
-        if donador[3]==True:
-            sexo="Masculino"
+        if donador[1] == cedula:
+            donador[8] = 0
+            donador[9] = justificacion
+            guardarDatos(baseDatos)
+            return "Donador eliminado correctamente."
+    return "La persona no está registrada."
 
-        else:
-            sexo="Femenino"
+def insertarLugar(lugares,provincia,lugar):
+    '''
+    Funcionalidad: Inserta lugar de donación.
+    Entrada: Recibe provincia y lugar.
+    Salida: Retorna mensaje.
+    '''
+    if provincia not in lugares:
+        lugares[provincia] = []
+    if lugar in lugares[provincia]:
+        return "El lugar ya existe."
+    lugares[provincia].append(lugar)
+    return "Lugar registrado correctamente."
 
-        datos.append([
-            donador[1],
-            donador[0][0]+" "+donador[0][1]+" "+donador[0][2],
-            donador[2],
-            donador[4],
-            donador[5],
-            sexo,
-            donador[7],
-            donador[6]
-        ])
+def reporteTipoSangre(baseDatos):
+    '''
+    Funcionalidad: Reporta cantidad por tipo de sangre.
+    Entrada: Recibe la base de datos.
+    Salida: Retorna reporte.
+    '''
+    texto = ""
+    for tipo in tiposSangre:
+        cantidad = 0
+        for donador in baseDatos:
+            if donador[2] == tipo:
+                cantidad += 1
+        texto += tipo+" : "+str(cantidad)+"\n"
+    return texto
 
-    encabezados=["Cédula","Nombre completo","Tipo de sangre","Fecha de nacimiento","Peso","Sexo","Teléfono","Correo"]
-
-    return crearHtml("reporte_lista_completa.html","Lista completa de donadores",encabezados,datos)
-
-def reporteAQuienPuedeDonar(baseDatos,tipoSangre):
-    datos=[]
-    compatibles=puedeDonarA[tipoSangre]
-
+def reporteMujeresONegativo(baseDatos):
+    '''
+    Funcionalidad: Busca mujeres O negativo.
+    Entrada: Recibe base de datos.
+    Salida: Retorna reporte.
+    '''
+    texto = ""
     for donador in baseDatos:
-        if donador[8]==1 and donador[2] in compatibles:
-            datos.append([
-                donador[1],
-                donador[0][0]+" "+donador[0][1]+" "+donador[0][2],
-                donador[2],
-                donador[7],
-                donador[6]
-            ])
+        if donador[2]=="O-" and donador[3]==False:
+            texto += str(donador[0])+"\n"
+    return texto
 
-    encabezados=["Cédula","Nombre completo","Tipo de sangre","Teléfono","Correo"]
+def reporteDonadoresProvincia(baseDatos):
+    '''
+    Funcionalidad: Cuenta donadores por provincia.
+    Entrada: Recibe base de datos.
+    Salida: Retorna reporte.
+    '''
+    texto=""
+    for provincia in range(1,8):
+        contador=0
+        for donador in baseDatos:
+            if donador[1][0] == str(provincia):
+                contador +=1
+        texto+="Provincia "+str(provincia)+": "+str(contador)+"\n"
+    return texto
 
-    return crearHtml("reporte_a_quien_puede_donar.html","Reporte ¿A quién puede donar?",encabezados,datos)
+def reporteLugares():
+    '''
+    Funcionalidad: Muestra lugares disponibles.
+    Entrada: No recibe entradas.
+    Salida: Retorna lugares.
+    '''
+    texto=""
+
+    for provincia in lugaresDonacion:
+        texto += str(provincia)+"\n"
+        for lugar in lugaresDonacion[provincia]:
+            texto += "- "+lugar+"\n"
+    return texto
 
 def reporteNoActivos(baseDatos):
-    datos=[]
+    '''
+    Funcionalidad: Reporta donadores inactivos.
+    Entrada: Recibe base de datos.
+    Salida: Retorna reporte.
+    '''
+    texto=""
 
     for donador in baseDatos:
         if donador[8]==0:
-            if donador[3]==True:
-                sexo="Masculino"
+            texto += str(donador[0])+"\n"
+    return texto
 
-            else:
-                sexo="Femenino"
+def reporteAQuienPuedeDonar(tipo):
+    '''
+    Funcionalidad: Indica a quién puede donar.
+    Entrada: Recibe tipo de sangre.
+    Salida: Retorna compatibilidad.
+    '''
+    return str(puedeDonarA[tipo])
 
-            datos.append([
-                justificaciones[donador[9]],
-                donador[1],
-                donador[0][0]+" "+donador[0][1]+" "+donador[0][2],
-                donador[2],
-                donador[4],
-                donador[5],
-                sexo,
-                donador[7],
-                donador[6]
-            ])
-
-    encabezados=["Justificación","Cédula","Nombre completo","Tipo de sangre","Fecha de nacimiento","Peso","Sexo","Teléfono","Correo"]
-
-    return crearHtml("reporte_no_activos.html","Reporte de donantes no activos",encabezados,datos)
 
 def salir():
-    return "Donar sangre, es donar vida"
+    '''
+    Funcionalidad: Muestra mensaje de salida.
+    Entrada: No recibe.
+    Salida: Retorna mensaje.
+    '''
+    return "Donar sangre es donar vida."
