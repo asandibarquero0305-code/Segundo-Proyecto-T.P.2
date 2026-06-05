@@ -254,6 +254,32 @@ def reporteAQuienPuedeDonar(tipo):
     '''
     return str(puedeDonarA[tipo])
 
+def reporteListaCompleta(baseDatos):
+    '''
+    Funcionalidad: Muestra todos los donadores registrados.
+    Entrada: Recibe la base de datos.
+    Salida: Retorna la lista completa de donadores.
+    '''
+    texto=""
+    for donador in baseDatos:
+        texto += "Nombre: "+str(donador[0])+"\n"
+        texto += "Cédula: "+donador[1]+"\n"
+        texto += "Sangre: "+donador[2]+"\n"
+        texto += "-----------------------\n"
+    return texto
+
+def reporteRangoEdad(baseDatos,edadInicial,edadFinal):
+    '''
+    Funcionalidad: Genera reporte de donadores por rango de edad.
+    Entrada: Recibe base de datos y edades.
+    Salida: Retorna los donadores dentro del rango.
+    '''
+    texto = ""
+    for donador in baseDatos:
+        edad = calcularEdad(donador[4])
+        if edad >= edadInicial and edad <= edadFinal:
+            texto += str(donador[0])+" Edad: "+str(edad)+"\n"
+    return texto
 
 def salir():
     '''
